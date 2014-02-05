@@ -139,8 +139,8 @@ $form->getElementBy('getType', 'submit')
             <li><a href="?brandcode=nd">Completely Cottages</a></li>
             <li><a href="?brandcode=in">Yorkshire Holiday Cottages</a></li>
             <li><a href="?brandcode=pd">Peak Disctrict Cottages</a></li>
-            <li><a href="?brandcode=hc">Venus</a></li>
-            <li><a href="?brandcode=wa">Neptune</a></li>
+            <li><a href="?brandcode=hc">Holiday Cotts</a></li>
+            <li><a href="?brandcode=wa">Wales Holidays</a></li>
             <li><a href="?brandcode=wy">Wyke Holidays</a></li>
         </ul>
         
