@@ -1,8 +1,7 @@
 <?php
 
 // Include libraries and objects
-require_once 'libraries/tabs-api-client/tabs/autoload.php';
-require_once 'libraries/aw-form-fields/aw/formfields/autoload.php';
+require_once 'vendor/autoload.php';
 require_once 'SearchConfigForm.class.php';
 require_once 'config.php';
 

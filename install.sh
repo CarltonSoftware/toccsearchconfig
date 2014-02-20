@@ -1,4 +1,7 @@
-mkdir libraries
-cd libraries
-git clone git@github.com:alexwyett/aw-form-fields.git
-git clone git@github.com:CarltonSoftware/tabs-api-client.git
+curl -sS https://getcomposer.org/installer | php
+./composer.phar install
+
+echo "Copying config file"
+cp config.sample.php config.php
+echo "Dont forget to edit your config file."
+
