@@ -59,9 +59,9 @@ if (count($_POST) > 0) {
 // Get areas/locations and attributes
 $areas = \tabs\api\utility\Utility::getAreasAndLocations();
 $info = \tabs\api\utility\Utility::getApiInformation();
-$attributes = $info->getAttributes();
+$searchTerms = $info->getSearchTerms();
 
-usort($attributes, function($a, $b) {
+usort($searchTerms, function($a, $b) {
     return ($a->getType() > $b->getType());
 });
 
@@ -71,7 +71,7 @@ $form = SearchConfigForm::factory(
     ),
     $_GET,
     $areas,
-    $attributes
+    $searchTerms
 );
 
 // Set template to bootstrap
