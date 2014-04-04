@@ -62,7 +62,7 @@ $info = \tabs\api\utility\Utility::getApiInformation();
 $searchTerms = $info->getSearchTerms();
 
 usort($searchTerms, function($a, $b) {
-    return ($a->getType() > $b->getType());
+    return ($a->getLabel() > $b->getLabel());
 });
 
 $form = SearchConfigForm::factory(

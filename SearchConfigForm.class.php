@@ -191,7 +191,8 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
         $hardCodedAttributes = array(
             'promote' => 'Promoted Property', 
             'specialOffer' => 'On Special Offer?', 
-            'pets' => 'Has Pets?'
+            'pets' => 'Has Pets?', 
+            'shortbreaktemplate' => 'Short breaks allowed template'
         );
         foreach ($hardCodedAttributes as $attrib => $attrLabel) {
             $fs->addChild(
@@ -228,30 +229,20 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
         // Add fieldset to form
         $form->addChild($fs);
         
-        
         // Add attributes fieldset if any are set
         if (count($searchAttributes) > 0) {            
-            // Fieldset
-            $fs = \aw\formfields\fields\Fieldset::factory(
-                'Property Attributes',
-                array(
-                    'class' => 'property-attributes'
-                )
-            );
-            
+            $types = array();            
             foreach ($searchAttributes as $attribute) {
-                if ($attribute->getType() == 'boolean') {
-                    $fs->addChild(
-                        self::getNewLabelAndCheckboxField(
+                if (!array_key_exists($attribute->getCode(), $hardCodedAttributes)) {
+                    if ($attribute->getType() == 'boolean') {
+                        $types[$attribute->getType()][] = self::getNewLabelAndCheckboxField(
                             $attribute->getLabel()
                         )->getElementBy('getType', 'checkbox')
                             ->setName($attribute->getCode())
                             ->setValue('true')
-                            ->getParent()
-                    );
-                } else if ($attribute->getType() == 'Number') {
-                    $fs->addChild(
-                        self::getNewLabelAndTextField(
+                            ->getParent();
+                    } else if ($attribute->getType() == 'Number') {
+                        $types[$attribute->getType()][] = self::getNewLabelAndTextField(
                             $attribute->getLabel()
                         )->getElementBy('getType', 'text')
                             ->setName($attribute->getCode())
@@ -265,13 +256,19 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
                                         '<' => '<'
                                     )
                                 )
-                            )
-                    );
+                            );
+                    }
                 }
             }
-        
-            // Add fieldset to form
-            $form->addChild($fs);
+            
+            foreach ($types as $type => $controls) {
+                // New fieldset for attribute type
+                $tfs = \aw\formfields\fields\Fieldset::factory(
+                    ucfirst($type) . ' Attributes'
+                );
+                $tfs->addChildren($controls);
+                $form->addChild($tfs);
+            }
         }
         
         // Add submit button
