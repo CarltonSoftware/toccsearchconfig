@@ -65,6 +65,10 @@ usort($searchTerms, function($a, $b) {
     return ($a->getLabel() > $b->getLabel());
 });
 
+$searchTerms = array_filter($searchTerms, function($ele) use ($brandCode) {
+    return (in_array($ele->getBrand(), array('', 'ALL', $brandCode)));
+});
+
 $form = SearchConfigForm::factory(
     array(
         'class' => 'form-horizontal'
