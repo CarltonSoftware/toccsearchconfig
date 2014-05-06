@@ -65,8 +65,8 @@ usort($searchTerms, function($a, $b) {
     return ($a->getLabel() > $b->getLabel());
 });
 
-$searchTerms = array_filter($searchTerms, function($ele) use ($brandCode) {
-    return (in_array($ele->getBrand(), array('', 'ALL', $brandCode)));
+$searchTerms = array_filter($searchTerms, function($ele) use ($brandcode) {
+    return (in_array($ele->getBrand(), array('', 'ALL', $brandcode)));
 });
 
 $form = SearchConfigForm::factory(
@@ -134,19 +134,15 @@ $form->getElementBy('getType', 'submit')
         <h1>TOCC Filter Config</h1>
         <p>Select the brand you wish to configure your search for.</p>
         <ul>
-            <li><a href="?brandcode=cu">Curlew Cottages</a></li>
-            <li><a href="?brandcode=nd">Completely Cottages</a></li>
-            <li><a href="?brandcode=fr">Freedom Holiday Homes</a></li>
-            <li><a href="?brandcode=hc">Holiday Cotts</a></li>
-            <li><a href="?brandcode=lp">Looe & Polperro</a></li>
-            <li><a href="?brandcode=ma">Marsdens Cottage Holidays</a></li>
-            <li><a href="?brandcode=no">Norfolk Country Cottages</a></li>
-            <li><a href="?brandcode=pd">Peak Disctrict Cottages</a></li>
-            <li><a href="?brandcode=sl">Southwold Lettings</a></li>
-            <li><a href="?brandcode=ss">Suffolk Secrets</a></li>
-            <li><a href="?brandcode=wa">Wales Holidays</a></li>
-            <li><a href="?brandcode=wy">Wyke Holidays</a></li>
-            <li><a href="?brandcode=in">Yorkshire Holiday Cottages</a></li>
+            <?php
+                foreach ($brands as $brand) {
+                    echo sprintf(
+                        '<li><a href="?brandcode=%s">%s</a></li>',
+                        strtolower($brand['brandcode']),
+                        $brand['name']
+                    );
+                }
+            ?>
         </ul>
         
         <div style="margin-bottom: 100px;">
