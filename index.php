@@ -66,7 +66,7 @@ usort($searchTerms, function($a, $b) {
 });
 
 $searchTerms = array_filter($searchTerms, function($ele) use ($brandcode) {
-    return (in_array($ele->getBrand(), array('', 'ALL', $brandcode)));
+    return (in_array($ele->getBrand(), array('', 'ALL', strtoupper($brandcode))));
 });
 
 $form = SearchConfigForm::factory(
