@@ -124,8 +124,8 @@ $form->getElementBy('getType', 'submit')
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
-	<meta charset="UTF-8">
-	<title>TOCC Search filter config</title>
+    <meta charset="UTF-8">
+    <title>TOCC Search filter config</title>
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
     <link href="datepicker/css/datepicker.css" rel="stylesheet">
 </head>
@@ -137,8 +137,9 @@ $form->getElementBy('getType', 'submit')
             <?php
                 foreach ($brands as $brand) {
                     echo sprintf(
-                        '<li><a href="?brandcode=%s">%s</a></li>',
+                        '<li><a href="?brandcode=%s"%s>%s</a></li>',
                         strtolower($brand['brandcode']),
+                        (($brandcode == strtolower($brand['brandcode'])) ? ' style="text-decoration: underline;"' : ''),
                         $brand['name']
                     );
                 }
@@ -165,7 +166,7 @@ $form->getElementBy('getType', 'submit')
             <a href="#" class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</a>
         </div>
     </div>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
     <script src="datepicker/js/bootstrap-datepicker.js"></script>
     
