@@ -5,12 +5,30 @@ require_once 'vendor/autoload.php';
 require_once 'SearchConfigForm.class.php';
 require_once 'config.php';
 
+// Get areas/locations and attributes
+$areas = \tabs\api\utility\Utility::getAreasAndLocations();
+$info = \tabs\api\utility\Utility::getApiInformation();
+$searchTerms = $info->getSearchTerms();
+
 if (count($_POST) > 0) {
 
     $filters = array();
     $postArray = array_filter($_POST, function($val) {
-        return (strlen($val) > 0);
+        if (is_string($val)) {
+            return (strlen($val) > 0);
+        } else {
+            return true;
+        }
     });
+    
+    if (array_key_exists('location', $postArray) 
+        && is_array($postArray['location'])
+    ) {
+        $postArray['location'] = implode(
+            '|',
+            array_filter($postArray['location'])
+        );
+    }
     
     // Apply attribute filters
     foreach ($postArray as $key => $val) {
@@ -26,6 +44,13 @@ if (count($_POST) > 0) {
             if (!stristr($key, '_op') && !stristr($key, '_between')) {
                 $filters[$key] = $val;
             }
+        }
+    }
+    
+    // Remove any invalid array filters (i.e. multiselect)
+    foreach (array_keys($filters) as $key) {
+        if (!array_key_exists($key, $searchTerms)) {
+            unset($filters[$key]);
         }
     }
 
@@ -56,11 +81,6 @@ if (count($_POST) > 0) {
     );
 }
 
-// Get areas/locations and attributes
-$areas = \tabs\api\utility\Utility::getAreasAndLocations();
-$info = \tabs\api\utility\Utility::getApiInformation();
-$searchTerms = $info->getSearchTerms();
-
 usort($searchTerms, function($a, $b) {
     return ($a->getLabel() > $b->getLabel());
 });
@@ -77,6 +97,12 @@ $form = SearchConfigForm::factory(
     $areas,
     $searchTerms
 );
+
+// Convert location dropdown to multiple
+$form->getElementBy('getName', 'location')
+    ->setName('location[]')
+    ->setAttribute('multiple', 'multiple')
+    ->addClass('multiselect');
 
 // Set template to bootstrap
 $form->each('getType', 'label', function($ele) {
@@ -128,6 +154,7 @@ $form->getElementBy('getType', 'submit')
     <title>TOCC Search filter config</title>
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
     <link href="datepicker/css/datepicker.css" rel="stylesheet">
+    <link href="bootstrap-multiselect/css/bootstrap-multiselect.css" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -169,9 +196,15 @@ $form->getElementBy('getType', 'submit')
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
     <script src="datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
     
     <script type="text/javascript">
         jQuery(document).ready(function() {
+            jQuery('.multiselect').multiselect({
+                maxHeight: 200,
+                enableFiltering: true
+            });
+            
             jQuery('.form-horizontal select, .form-horizontal input').change(function() {
                 if (jQuery(this).attr('name').indexOf('_op') > 0) {
                     var name = jQuery(this).attr('name').replace('_op', '');
