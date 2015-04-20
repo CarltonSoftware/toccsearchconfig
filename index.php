@@ -20,8 +20,8 @@ if (count($_POST) > 0) {
             return true;
         }
     });
-    
-    if (array_key_exists('location', $postArray) 
+
+    if (array_key_exists('location', $postArray)
         && is_array($postArray['location'])
     ) {
         $postArray['location'] = implode(
@@ -29,7 +29,7 @@ if (count($_POST) > 0) {
             array_filter($postArray['location'])
         );
     }
-    
+
     // Apply attribute filters
     foreach ($postArray as $key => $val) {
         if (isset($postArray[$key . '_op'])) {
@@ -46,7 +46,7 @@ if (count($_POST) > 0) {
             }
         }
     }
-    
+
     // Remove any invalid array filters (i.e. multiselect)
     foreach (array_keys($filters) as $key) {
         if (!array_key_exists($key, $searchTerms)) {
@@ -59,14 +59,14 @@ if (count($_POST) > 0) {
         array(),
         basename(__FILE__)
     );
-    
+
     $searchHelper->search();
     $filter = 'No filter available';
     if ($searchHelper->search()) {
         if ($searchHelper->getSearch()->getFilter() != '') {
             $filter = str_replace(
-                ':', 
-                '&', 
+                ':',
+                '&',
                 $searchHelper->getSearch()->getFilter()
             );
         }
@@ -126,7 +126,7 @@ $form->each('getType', 'select', function($ele) {
 
 // Set size of the attribute text boxes
 $form->each('getType', 'text', function($ele) {
-    if (stristr($ele->getName(), 'ATTR') 
+    if (stristr($ele->getName(), 'ATTR')
         || in_array($ele->getName(), array('accommodates', 'rating', 'bedrooms'))
     ) {
         $ele->setAttribute('style', 'width: 50px;');
@@ -172,7 +172,7 @@ $form->getElementBy('getType', 'submit')
                 }
             ?>
         </ul>
-        
+
         <div style="margin-bottom: 100px;">
         <?php
             echo $form;
@@ -197,14 +197,14 @@ $form->getElementBy('getType', 'submit')
     <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
     <script src="datepicker/js/bootstrap-datepicker.js"></script>
     <script src="bootstrap-multiselect/js/bootstrap-multiselect.js"></script>
-    
+
     <script type="text/javascript">
         jQuery(document).ready(function() {
             jQuery('.multiselect').multiselect({
                 maxHeight: 200,
                 enableFiltering: true
             });
-            
+
             jQuery('.form-horizontal select, .form-horizontal input').change(function() {
                 if (jQuery(this).attr('name').indexOf('_op') > 0) {
                     var name = jQuery(this).attr('name').replace('_op', '');
@@ -221,7 +221,7 @@ $form->getElementBy('getType', 'submit')
                     format: 'dd-mm-yyyy'
                 }
             ).on('changeDate', getAmount);
-            
+
             jQuery('.form-horizontal').submit(function(e) {
                 e.preventDefault();
                 jQuery('.moda-body .well').html();

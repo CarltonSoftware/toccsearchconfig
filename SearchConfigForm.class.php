@@ -18,7 +18,7 @@
  * method to build the form object
  *
  * PHP Version 5.3
- * 
+ *
  * @category  Forms
  * @package   AW
  * @author    Alex Wyett <alex@wyett.co.uk>
@@ -30,12 +30,12 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
 {
     /**
      * Constructor
-     * 
+     *
      * @param array $attributes       Form attributes
      * @param array $formValues       Form Values
      * @param array $searchAreas      Tabs Api Area objects
      * @param array $searchAttributes Tabs Api Attribute objects
-     * 
+     *
      * @return void
      */
     public static function factory(
@@ -46,9 +46,9 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
     ) {
         // New form object
         $form = new \aw\formfields\forms\Form($attributes, $formValues);
-        
+
         // Add location fieldset if locations are present in api
-        if (count($searchAreas) > 0) {        
+        if (count($searchAreas) > 0) {
             // Fieldset
             $fs = \aw\formfields\fields\Fieldset::factory(
                 'Property Location',
@@ -56,7 +56,7 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
                     'class' => 'property-location'
                 )
             );
-            
+
             $areas = array('Any' => '');
             $locations = array('Any' => '');
             foreach ($searchAreas as $area) {
@@ -76,7 +76,7 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
                     $areas
                 )
             );
-            
+
             if (count($locations) > 1) {
                 $fs->addChild(
                     self::getNewLabelAndSelect(
@@ -85,12 +85,12 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
                     )
                 );
             }
-        
+
             // Add fieldset to form
             $form->addChild($fs);
         }
-        
-        
+
+
         // Fieldset
         $fs = \aw\formfields\fields\Fieldset::factory(
             'Holiday Details',
@@ -118,11 +118,11 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
                 ->setId('toDate')
                 ->getParent()
         );
-        
+
         // Add nights field
         $fs->addChild(
              self::getNewLabelAndSelect(
-                'Nights', 
+                'Nights',
                 array(
                     'Any' => '',
                     '2 Nights' => '2',
@@ -143,12 +143,27 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
                 )
             )
         );
-        
+
+        // Add nights field
+        $fs->addChild(
+             self::getNewLabelAndSelect(
+                'Plus Minus',
+                array(
+                    'None' => '',
+                    '0 days' => '0',
+                    '1 days' => '1',
+                    '2 days' => '2',
+                    '3 days' => '3'
+                )
+            )->getElementBy('getType', 'select')
+                ->setName('plusMinus')
+                ->setId('plusMinus')
+                ->getParent()
+        );
+
         // Add fieldset to form
         $form->addChild($fs);
-        
-        
-        
+
         // Fieldset
         $fs = \aw\formfields\fields\Fieldset::factory(
             'Property Details',
@@ -165,34 +180,35 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
                 ->setName('reference')
                 ->getParent()
         );
-        
+
         // Add sleeps field
         $fs->addChild(
             self::getNewLabelAndTextField(
                 'Accommodates'
             )->setLabel('Sleeps')
         );
-        
+
         // Add bedrooms field
         $fs->addChild(
             self::getNewLabelAndTextField(
                 'Bedrooms'
             )
         );
-        
+
         // Add Rating field
         $fs->addChild(
             self::getNewLabelAndTextField(
                 'Rating'
             )->setLabel('Star Rating (1 to 5)')
         );
-        
+
         // Add default attributes
         $hardCodedAttributes = array(
-            'promote' => 'Promoted Property', 
-            'specialOffer' => 'On Special Offer?', 
-            'pets' => 'Has Pets?', 
-            'shortbreaktemplate' => 'Short breaks allowed template'
+            'promote' => 'Promoted Property',
+            'specialOffer' => 'On Special Offer?',
+            'pets' => 'Has Pets?',
+            'shortbreaktemplate' => 'Short breaks allowed template',
+            'sbtemplate' => 'New shortbreak template filter'
         );
         foreach ($hardCodedAttributes as $attrib => $attrLabel) {
             $fs->addChild(
@@ -204,7 +220,7 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
                     ->getParent()
             );
         }
-        
+
         // Add between operand
         $fs->each('getType', 'text', function($ele) {
             if ($ele->getName() != 'reference') {
@@ -225,13 +241,13 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
                 );
             }
         });
-        
+
         // Add fieldset to form
         $form->addChild($fs);
-        
+
         // Add attributes fieldset if any are set
-        if (count($searchAttributes) > 0) {            
-            $types = array();            
+        if (count($searchAttributes) > 0) {
+            $types = array();
             foreach ($searchAttributes as $attribute) {
                 if (!array_key_exists($attribute->getCode(), $hardCodedAttributes)) {
                     if ($attribute->getType() == 'boolean') {
@@ -260,7 +276,7 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
                     }
                 }
             }
-            
+
             foreach ($types as $type => $controls) {
                 // New fieldset for attribute type
                 $tfs = \aw\formfields\fields\Fieldset::factory(
@@ -270,7 +286,7 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
                 $form->addChild($tfs);
             }
         }
-        
+
         // Add submit button
         $form->addChild(
             new \aw\formfields\fields\SubmitButton(
@@ -279,7 +295,7 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
                 )
             )
         );
-        
+
         return $form->mapValues();
     }
 }
