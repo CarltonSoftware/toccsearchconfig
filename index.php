@@ -21,13 +21,15 @@ if (count($_POST) > 0) {
         }
     });
 
-    if (array_key_exists('location', $postArray)
-        && is_array($postArray['location'])
-    ) {
-        $postArray['location'] = implode(
-            '|',
-            array_filter($postArray['location'])
-        );
+    foreach (array('destination', 'area', 'location') as $key) {
+        if (array_key_exists($key, $postArray)
+            && is_array($postArray[$key])
+        ) {
+            $postArray[$key] = implode(
+                '|',
+                array_filter($postArray[$key])
+            );
+        }
     }
 
     // Apply attribute filters
@@ -61,7 +63,7 @@ if (count($_POST) > 0) {
     );
 
     $searchHelper->search();
-    $filter = 'No filter available';
+    $filter = false;
     if ($searchHelper->search()) {
         if ($searchHelper->getSearch()->getFilter() != '') {
             $filter = str_replace(
@@ -70,11 +72,15 @@ if (count($_POST) > 0) {
                 $searchHelper->getSearch()->getFilter()
             );
         }
+        if (isset($postArray['destination'])) {
+            $filter .= '&destination=' . $postArray['destination'];
+            $filter = ltrim($filter, '&');
+        }
     }
     die(
         json_encode(
             array(
-                'filter' => urldecode($filter),
+                'filter' => ($filter) ? urldecode($filter) : 'No filter available',
                 'amount' => $searchHelper->getTotal()
             )
         )
@@ -95,17 +101,21 @@ $form = SearchConfigForm::factory(
     ),
     $_GET,
     $areas,
-    $searchTerms
+    $searchTerms,
+    $brandcode
 );
 
-// Convert location dropdown to multiple
-$form->getElementBy('getName', 'location-code')
-    ->setName('location[]')
-    ->setAttribute('multiple', 'multiple')
-    ->addClass('multiselect');
-
-// Rename radius field
+$form->getElementBy('getName', 'location-code')->setName('location');
 $form->getElementBy('getName', 'distance-from-coordinates')->setName('distance');
+
+foreach (array('destination', 'area', 'location') as $key) {
+    if ($form->getElementBy('getName', $key)) {
+        $form->getElementBy('getName', $key)
+            ->setName($key . '[]')
+            ->setAttribute('multiple', 'multiple')
+            ->addClass('multiselect');
+    }
+}
 
 // Set template to bootstrap
 $form->each('getType', 'label', function($ele) {

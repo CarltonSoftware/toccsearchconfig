@@ -31,10 +31,11 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
     /**
      * Constructor
      *
-     * @param array $attributes       Form attributes
-     * @param array $formValues       Form Values
-     * @param array $searchAreas      Tabs Api Area objects
-     * @param array $searchAttributes Tabs Api Attribute objects
+     * @param array  $attributes       Form attributes
+     * @param array  $formValues       Form Values
+     * @param array  $searchAreas      Tabs Api Area objects
+     * @param array  $searchAttributes Tabs Api Attribute objects
+     * @param string $brandcode        Brandcode
      *
      * @return void
      */
@@ -42,7 +43,8 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
         $attributes = array(),
         $formValues = array(),
         $searchAreas = array(),
-        $searchAttributes = array()
+        $searchAttributes = array(),
+        $brandcode = 'no'
     ) {
         // New form object
         $form = new \aw\formfields\forms\Form($attributes, $formValues);
@@ -57,8 +59,8 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
                 )
             );
 
-            $areas = array('Any' => '');
-            $locations = array('Any' => '');
+            $areas = array();
+            $locations = array();
             $coordinates = array('Any' => '');
             foreach ($searchAreas as $area) {
                 $areas[$area->getName()] = $area->getCode();
@@ -75,6 +77,35 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
                     }
                 }
             }
+
+            if ($brandcode == 'oc') {
+
+                $destinations = array(
+                    'North East England' => '273',
+                    'Yorkshire' => '126',
+                    'Wales' => '123',
+                    'Sussex' => '120',
+                    'Suffolk' => '118',
+                    'Norfolk' => '106',
+                    'Lancashire' => '93',
+                    'Kent' => '92',
+                    'Dorset' => '66',
+                    'Devon' => '51',
+                    'Cumbria & The Lake District' => '47',
+                    'Cornwall' => '15'
+                );
+
+                ksort($destinations);
+
+                $fs->addChild(
+                    self::getNewLabelAndSelect(
+                        'Destination',
+                        $destinations
+                    )
+                );
+            }
+
+            asort($areas);
             $fs->addChild(
                 self::getNewLabelAndSelect(
                     'Area',
@@ -83,6 +114,7 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
             );
 
             if (count($locations) > 1) {
+                asort($locations);
                 $fs->addChild(
                     self::getNewLabelAndSelect(
                         'Location code',
@@ -234,8 +266,7 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
             'promote' => 'Promoted Property',
             'specialOffer' => 'On Special Offer?',
             'pets' => 'Has Pets?',
-            'shortbreaktemplate' => 'Short breaks allowed template',
-            'sbtemplate' => 'New shortbreak template filter'
+            'sbtemplate' => 'Shortbreak filter'
         );
         foreach ($hardCodedAttributes as $attrib => $attrLabel) {
             $fs->addChild(
