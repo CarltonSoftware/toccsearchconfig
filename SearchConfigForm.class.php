@@ -85,7 +85,7 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
             if (count($locations) > 1) {
                 $fs->addChild(
                     self::getNewLabelAndSelect(
-                        'Location',
+                        'Location code',
                         $locations
                     )
                 );
@@ -99,10 +99,10 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
 
             $fs->addChild(
                 self::getNewLabelAndSelect(
-                    'Distance',
+                    'Distance from coordinates',
                     array(
                         '' => '',
-                        'Exact location only' => '0',
+                        'Exact coordinates only' => '0',
                         '1 mile' => '1.6',
                         '3 miles' => '4.8',
                         '5 miles' => '8',

@@ -99,10 +99,13 @@ $form = SearchConfigForm::factory(
 );
 
 // Convert location dropdown to multiple
-$form->getElementBy('getName', 'location')
+$form->getElementBy('getName', 'location-code')
     ->setName('location[]')
     ->setAttribute('multiple', 'multiple')
     ->addClass('multiselect');
+
+// Rename radius field
+$form->getElementBy('getName', 'distance-from-coordinates')->setName('distance');
 
 // Set template to bootstrap
 $form->each('getType', 'label', function($ele) {
