@@ -59,12 +59,17 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
 
             $areas = array('Any' => '');
             $locations = array('Any' => '');
+            $coordinates = array('Any' => '');
             foreach ($searchAreas as $area) {
                 $areas[$area->getName()] = $area->getCode();
                 if ($area->getLocations() > 0) {
                     foreach ($area->getLocations() as $location) {
                         $locations[$location->getName()] = array(
                             'value' => $location->getCode(),
+                            'class' => 'area' . $area->getCode()
+                        );
+                        $coordinates[$location->getName()] = array(
+                            'value' => $location->getCoordinates(),
                             'class' => 'area' . $area->getCode()
                         );
                     }
@@ -84,7 +89,29 @@ class SearchConfigForm extends \aw\formfields\forms\StaticForm
                         $locations
                     )
                 );
+                $fs->addChild(
+                    self::getNewLabelAndSelect(
+                        'Coordinates',
+                        $coordinates
+                    )
+                );
             }
+
+            $fs->addChild(
+                self::getNewLabelAndSelect(
+                    'Distance',
+                    array(
+                        '' => '',
+                        'Exact location only' => '0',
+                        '1 mile' => '1.6',
+                        '3 miles' => '4.8',
+                        '5 miles' => '8',
+                        '10 miles' => '16',
+                        '15 miles' => '24',
+                        '20 miles' => '32'
+                    )
+                )
+            );
 
             // Add fieldset to form
             $form->addChild($fs);
