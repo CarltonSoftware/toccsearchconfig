@@ -231,7 +231,7 @@ $form->getElementBy('getType', 'submit')
             });
             jQuery('#fromDate, #toDate').datepicker(
                 {
-                    format: 'dd+MM+yyyy'
+                    format: 'dd-mm-yyyy'
                 }
             ).on('changeDate', getAmount);
 
